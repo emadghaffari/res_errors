@@ -72,7 +72,7 @@ func HandlerInternalServerError(message string, err error) ResError {
 }
 
 // HandleRestError func
-func HandleRestError(message string, status int, er string, causes []interface{}) ResError {
+func HandleRestError(message string, status int, er error, causes []interface{}) ResError {
 	return resError{
 		message: message,
 		status:  http.StatusUnauthorized,
