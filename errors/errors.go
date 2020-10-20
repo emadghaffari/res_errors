@@ -1,6 +1,11 @@
 package errors
 
-import "net/http"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+)
 
 // ResError interface
 type ResError interface {
@@ -12,14 +17,14 @@ type ResError interface {
 
 // resError struct
 type resError struct {
-	message string        `json:"message"`
-	status  int           `json:"status"`
-	error   string        `json:"error"`
-	causes  []interface{} `json:"causes"`
+	message string
+	status  int
+	error   string
+	causes  []interface{}
 }
 
 func (re resError) Error() string {
-	return re.error
+	return fmt.Sprintf("message: %s - status: %d - error: %v - causes: %v", re.message, re.status, re.error, re.causes)
 }
 func (re resError) Message() string {
 	return re.message
@@ -79,4 +84,13 @@ func HandleRestError(message string, status int, er string, causes []interface{}
 		error:   er,
 		causes:  causes,
 	}
+}
+
+// HandleRestErrorFromBytes func
+func HandleRestErrorFromBytes(message []byte) (ResError, error) {
+	var apiErr resError
+	if err := json.Unmarshal(message, &apiErr); err != nil {
+		return nil, errors.New("invalid json")
+	}
+	return apiErr, nil
 }
