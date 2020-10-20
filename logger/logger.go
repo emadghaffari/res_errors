@@ -20,6 +20,11 @@ type logger struct {
 	log *zap.Logger
 }
 
+// GetLogger func
+func GetLogger() logger {
+	return log
+}
+
 func init() {
 	conf := zap.Config{
 		OutputPaths: []string{"stdout"},
